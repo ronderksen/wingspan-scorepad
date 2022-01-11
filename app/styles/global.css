@@ -214,11 +214,3 @@ input:where([type="search"]) {
   margin-top: 0;
   margin-bottom: 0;
 }
-
-.player-color-egg {
-  display: inline-block;
-  width: 20px;
-  height: 30px;
-  border-radius: 50% 50% 50% 50%/ 60% 60% 30% 30%;
-  background-color: var(--color, transparent);
-}

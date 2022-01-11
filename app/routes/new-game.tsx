@@ -1,15 +1,17 @@
 import * as React from "react";
 import { Form } from "@remix-run/react";
-import { PlayerColor } from "@prisma/client";
+import { Goal, PlayerColor } from "@prisma/client";
 import {
   ActionFunction,
-  Link,
+  Link, LinksFunction,
   LoaderFunction,
   redirect,
-  useLoaderData,
+  useLoaderData
 } from "remix";
-import { db } from "../utils/db.server";
-import { commitSession, getSession } from "../utils/session.server";
+import { db } from "~/utils/db.server";
+import { commitSession, getSession } from "~/utils/session.server";
+import { GoalSelector } from "~/components/goal-selector";
+import newGameStylesUrl from "../styles/new-game.css";
 
 interface Player {
   name: string;
@@ -19,10 +21,17 @@ interface Player {
 type LoaderData = {
   playerColors: PlayerColor[];
   players: Player[];
+  goals: Goal[];
 };
 
 interface EggLabelCssProperties extends React.CSSProperties {
   "--color": string;
+}
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: 'stylesheet',href: newGameStylesUrl }
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -32,10 +41,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   const playerColors = await db.playerColor.findMany({
     orderBy: { name: "asc" },
   });
+  const goals = await db.goal.findMany({
+    orderBy: { expansionId: "asc" }
+  });
 
   const data: LoaderData = {
     playerColors,
     players,
+    goals
   };
 
   return data;
@@ -136,6 +149,7 @@ export default function NewGame() {
           );
         })}
       </ul>
+      <GoalSelector goals={data.goals} />
     </>
   );
 }

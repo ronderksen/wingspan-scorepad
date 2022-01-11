@@ -1,0 +1,92 @@
+@keyframes borderFade {
+  0% {
+    border-color: var(--border-transparent);
+  }
+  100% {
+    border-color: var(--border-full-color);
+  }
+}
+
+:root {
+  --color: red;
+  --index: 0;
+}
+
+.player-color-egg {
+  display: inline-block;
+  width: 20px;
+  height: 30px;
+  border-radius: 50% 50% 50% 50%/ 60% 60% 30% 30%;
+  background-color: var(--color, transparent);
+}
+
+.blocks-wrapper {
+  max-width: 500px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
+  grid-gap: 1rem;
+}
+
+.block {
+  --anim-duration: 400ms;
+  --anim-delay-multiplier: 0.3;
+  --border-transparent: rgba(0, 0, 155, 0);
+  --border-full-color: #eacb1a;
+
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle at center, #ffffff, #ffffff 80%, #745476 80%);
+
+  user-select: none;
+}
+
+.block:focus {
+  outline: 2px solid rgba(0, 100, 205);
+}
+
+.block label {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.block img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--border-transparent);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.block input {
+  visibility: hidden;
+  position: absolute;
+}
+
+.block.selected label > img {
+  border-color: var(--border-full-color);
+}
+
+.animate label > img {
+  animation: borderFade var(--anim-duration) 1;
+  animation-delay: calc(
+    var(--index) * var(--anim-duration) * var(--anim-delay-multiplier)
+  );
+  animation-fill-mode: backwards;
+}
+
+.block.selected label::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 5px;
+  background: rgba(0, 0, 0, 0.2);
+}
